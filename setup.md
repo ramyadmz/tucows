@@ -11,7 +11,9 @@ Make sure you have the following prerequisites installed on your system:
 ## Clone the Repository
 
 Open a terminal and clone the repository to your desired directory:
+
 `git clone <https://github.com/ramyadmz/tucows>`
+
 `cd <repository-directory>`
 
 ## Terminal Application
