@@ -1,0 +1,2 @@
+*.log       # Ignore all .log files
+.DS_Store   # Ignore OS files
