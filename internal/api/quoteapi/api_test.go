@@ -29,14 +29,14 @@ func TestGetRandomQuote_Error(t *testing.T) {
 func TestBuildPath(t *testing.T) {
 	api := NewQuoteApiBuilder().Build()
 	quoteConfig := NewQuoteConfigBuilder().WithKey(100).Build()
-	expectedPath := "http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json&key=100"
+	expectedPath := "http://api.forismatic.com/api/1.0/?format=json&key=100&lang=en&method=getQuote"
 
-	result := api.buildPath(quoteConfig)
+	result := api.(*quoteAPI).buildPath(quoteConfig)
 	assert.Equal(t, expectedPath, result, "Path built with incorrect format")
 }
 
 func TestQuoteAPIBuilder(t *testing.T) {
-	expected := quoteAPI{
+	expected := &quoteAPI{
 		baseURL:  "test",
 		method:   "get",
 		format:   "xml",

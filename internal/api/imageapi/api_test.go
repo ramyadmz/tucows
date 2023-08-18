@@ -28,7 +28,7 @@ func TestBuildPathWithImageSizeAndFilters(t *testing.T) {
 	api := NewImageAPIBuilder().Build()
 	imageConfig := NewImageConfigBuilder().WithWidth(400).WithHeight(600).WithFilters(ImageFilters{"blur", "grayscale"}).Build()
 	expectedPath := "https://picsum.photos/400/600.jpg?blur&grayscale"
-	resultPath := api.buildPath(imageConfig)
+	resultPath := api.(*imageAPI).buildPath(imageConfig)
 	assert.Equal(t, expectedPath, resultPath, "Path built with incorrect format")
 }
 
@@ -36,12 +36,12 @@ func TestBuildPathWithoutImageConfig(t *testing.T) {
 	api := NewImageAPIBuilder().Build()
 	imageConfig := NewImageConfigBuilder().Build()
 	expectedPath := "https://picsum.photos/200/300.jpg"
-	resultPath := api.buildPath(imageConfig)
+	resultPath := api.(*imageAPI).buildPath(imageConfig)
 	assert.Equal(t, expectedPath, resultPath, "Path built with incorrect format")
 }
 
 func TestImageAPIBuilder(t *testing.T) {
-	expected := imageAPI{
+	expected := &imageAPI{
 		baseURL: "test",
 	}
 	result := NewImageAPIBuilder().WithBaseURL(expected.baseURL).Build()

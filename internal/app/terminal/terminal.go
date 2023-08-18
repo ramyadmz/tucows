@@ -23,7 +23,7 @@ const (
 
 // TerminalApp implements the AppInterface for the terminal application.
 type TerminalApp struct {
-	api     facade.APIInterface
+	api     facade.API
 	options app.Options
 }
 
@@ -31,7 +31,7 @@ type TerminalApp struct {
 var _ app.App = (*TerminalApp)(nil)
 
 // NewTerminalApp creates a new instance of the TerminalApp.
-func NewTerminalApp(apiFacade facade.APIInterface) app.App {
+func NewTerminalApp(apiFacade facade.API) app.App {
 	return &TerminalApp{
 		api: apiFacade,
 	}

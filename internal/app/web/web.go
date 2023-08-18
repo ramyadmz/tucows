@@ -37,7 +37,7 @@ type Data struct {
 type WebApp struct {
 	IncomingRequest *http.Request
 	ResponseWriter  http.ResponseWriter
-	API             facade.APIInterface
+	API             facade.API
 	AppOptions      app.Options
 	RenderedContent Data
 	Port            int
@@ -47,7 +47,7 @@ type WebApp struct {
 var _ app.App = (*WebApp)(nil)
 
 // NewTerminalApp creates a new instance of the TerminalApp.
-func NewWebApp(apiFacade facade.APIInterface, port int) app.App {
+func NewWebApp(apiFacade facade.API, port int) app.App {
 	return &WebApp{
 		API:  apiFacade,
 		Port: port,

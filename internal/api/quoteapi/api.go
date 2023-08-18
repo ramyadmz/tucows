@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
+	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/avast/retry-go"
@@ -28,7 +29,7 @@ const (
 
 // QuoteApiBuilder provides methods for building a quoteAPI instance.
 type QuoteApiBuilder struct {
-	api quoteAPI
+	api *quoteAPI
 }
 
 // quoteAPI represents a quote API with various properties.
@@ -37,6 +38,10 @@ type quoteAPI struct {
 	method   string
 	format   string
 	language string
+}
+
+type QuoteProvider interface {
+	GetRandomQuote(txtcnfg quoteConfig) (string, error)
 }
 
 // QuoteConfigBuilder provides methods for building a quoteConfig instance.
@@ -52,7 +57,7 @@ type quoteConfig struct {
 // NewQuoteApiBuilder creates a new QuoteApiBuilder instance with default properties.
 func NewQuoteApiBuilder() *QuoteApiBuilder {
 	return &QuoteApiBuilder{
-		api: quoteAPI{
+		api: &quoteAPI{
 			baseURL:  DefaultBaseUrl,
 			method:   DefualtMethod,
 			format:   DefualtFormat,
@@ -86,7 +91,7 @@ func (tab *QuoteApiBuilder) WithLanguage(language string) *QuoteApiBuilder {
 }
 
 // Build constructs and returns a quoteAPI instance.
-func (tab *QuoteApiBuilder) Build() quoteAPI {
+func (tab *QuoteApiBuilder) Build() QuoteProvider {
 	return tab.api
 }
 
@@ -161,17 +166,17 @@ func (api *quoteAPI) GetRandomQuote(txtcnfg quoteConfig) (string, error) {
 
 // buildPath constructs the URL path for fetching a quote based on the provided configuration.
 func (api *quoteAPI) buildPath(txtcnfg quoteConfig) string {
-	var path strings.Builder
-	path.WriteString(api.baseURL)
-	path.WriteString("?")
-	path.WriteString(fmt.Sprintf("method=%s", api.method))
-	path.WriteString("&")
-	path.WriteString(fmt.Sprintf("lang=%s", api.language))
-	path.WriteString("&")
-	path.WriteString(fmt.Sprintf("format=%s", api.format))
-	if txtcnfg.Key > 0 {
-		path.WriteString("&")
-		path.WriteString(fmt.Sprintf("key=%d", txtcnfg.Key))
+	baseURL, _ := url.Parse(api.baseURL)
+	query := url.Values{
+		"method": []string{api.method},
+		"lang":   []string{api.language},
+		"format": []string{api.format},
 	}
-	return path.String()
+
+	if txtcnfg.Key > 0 {
+		query.Set("key", strconv.Itoa(txtcnfg.Key))
+	}
+
+	baseURL.RawQuery = query.Encode()
+	return baseURL.String()
 }

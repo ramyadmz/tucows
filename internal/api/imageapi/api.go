@@ -34,12 +34,16 @@ const (
 
 // ImageAPIBuilder provides methods for building an imageAPI instance.
 type ImageAPIBuilder struct {
-	api imageAPI
+	api *imageAPI
 }
 
 // imageAPI represents an image API with a base URL.
 type imageAPI struct {
 	baseURL string
+}
+
+type ImageProvider interface {
+	GetRandomImage(imgCnfg imageConfig) (image.Image, error)
 }
 
 // ImageConfigBuilder provides methods for building an imageConfig instance.
@@ -57,7 +61,7 @@ type imageConfig struct {
 // NewImageAPIBuilder creates a new ImageAPIBuilder instance with the default base URL.
 func NewImageAPIBuilder() *ImageAPIBuilder {
 	return &ImageAPIBuilder{
-		api: imageAPI{
+		api: &imageAPI{
 			baseURL: defaultBaseUrl,
 		},
 	}
@@ -70,7 +74,7 @@ func (iab *ImageAPIBuilder) WithBaseURL(baseURL string) *ImageAPIBuilder {
 }
 
 // Build constructs and returns an imageAPI instance.
-func (iab *ImageAPIBuilder) Build() imageAPI {
+func (iab *ImageAPIBuilder) Build() ImageProvider {
 	return iab.api
 }
 
