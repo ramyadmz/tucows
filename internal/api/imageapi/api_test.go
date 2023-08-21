@@ -9,7 +9,7 @@ import (
 
 func TestGetRandomImage_success(t *testing.T) {
 	api := NewImageAPIBuilder().Build()
-	imageConfig := NewImageConfigBuilder().WithWidth(800).WithHeight(1200).WithFilters(ImageFilters{"grayscale"}).Build()
+	imageConfig := NewImageConfigBuilder().WithWidth(800).WithHeight(1200).WithFilters(ImageFilters{"grayscale"})
 
 	_, err := api.GetRandomImage(imageConfig)
 	assert.NoError(t, err, "Expected no error for this image config")
@@ -17,7 +17,7 @@ func TestGetRandomImage_success(t *testing.T) {
 
 func TestGetRandomImage_Error(t *testing.T) {
 	api := NewImageAPIBuilder().WithBaseURL("http://unavailable.unavailable").Build()
-	imageConfig := NewImageConfigBuilder().Build()
+	imageConfig := NewImageConfigBuilder()
 	expectedError := fmt.Errorf("failed to get image from random image API after retries")
 	_, err := api.GetRandomImage(imageConfig)
 	assert.Error(t, err, "Expected error due to unavailable API")

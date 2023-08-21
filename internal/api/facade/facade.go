@@ -5,14 +5,10 @@ import (
 	"image"
 	"sync"
 
+	"github.com/ramyad/tucows/internal/api"
 	"github.com/ramyad/tucows/internal/api/imageapi"
 	"github.com/ramyad/tucows/internal/api/quoteapi"
 )
-
-// API represents an interface for interacting with various APIs to fetch random quotes and images.
-type API interface {
-	GetRandomQuoteWithImage(qtcnfbldr *quoteapi.QuoteConfigBuilder, imgCnfgBldr *imageapi.ImageConfigBuilder) (string, image.Image, error)
-}
 
 // APIFacade encapsulates interactions with quote and image APIs.
 type APIFacade struct {
@@ -20,8 +16,8 @@ type APIFacade struct {
 	imageProvider imageapi.ImageProvider
 }
 
-// NewAPIFacade creates a new instance of APIFacade.
-func NewAPIFacade() API {
+// NewAPIFacade creates a new instance of API interface.
+func NewAPIFacade() api.API {
 	return &APIFacade{
 		quoteProvider: quoteapi.NewQuoteApiBuilder().Build(),
 		imageProvider: imageapi.NewImageAPIBuilder().Build(),
@@ -36,18 +32,15 @@ func (facade *APIFacade) GetRandomQuoteWithImage(qtcnfbldr *quoteapi.QuoteConfig
 	var image image.Image
 	var quoteErr, imageErr error
 
-	quoteConfig := qtcnfbldr.Build()
-	imageConfig := imgCnfgBldr.Build()
-
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		quote, quoteErr = facade.quoteProvider.GetRandomQuote(quoteConfig)
+		quote, quoteErr = facade.quoteProvider.GetRandomQuote(qtcnfbldr)
 	}()
 
 	go func() {
 		defer wg.Done()
-		image, imageErr = facade.imageProvider.GetRandomImage(imageConfig)
+		image, imageErr = facade.imageProvider.GetRandomImage(imgCnfgBldr)
 	}()
 
 	wg.Wait()

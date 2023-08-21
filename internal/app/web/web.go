@@ -13,7 +13,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/ramyad/tucows/internal/api/facade"
+	"github.com/ramyad/tucows/internal/api"
 	"github.com/ramyad/tucows/internal/api/imageapi"
 	"github.com/ramyad/tucows/internal/api/quoteapi"
 	"github.com/ramyad/tucows/internal/app"
@@ -37,7 +37,7 @@ type Data struct {
 type WebApp struct {
 	IncomingRequest *http.Request
 	ResponseWriter  http.ResponseWriter
-	API             facade.API
+	API             api.API
 	AppOptions      app.Options
 	RenderedContent Data
 	Port            int
@@ -47,9 +47,9 @@ type WebApp struct {
 var _ app.App = (*WebApp)(nil)
 
 // NewTerminalApp creates a new instance of the TerminalApp.
-func NewWebApp(apiFacade facade.API, port int) app.App {
+func NewWebApp(api api.API, port int) app.App {
 	return &WebApp{
-		API:  apiFacade,
+		API:  api,
 		Port: port,
 	}
 }

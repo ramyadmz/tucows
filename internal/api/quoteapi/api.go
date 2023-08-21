@@ -40,8 +40,9 @@ type quoteAPI struct {
 	language string
 }
 
+// QuoteProvider is an interface that defines the contract for fetching random quote.
 type QuoteProvider interface {
-	GetRandomQuote(txtcnfg quoteConfig) (string, error)
+	GetRandomQuote(qtCnfgBldr *QuoteConfigBuilder) (string, error)
 }
 
 // QuoteConfigBuilder provides methods for building a quoteConfig instance.
@@ -90,7 +91,7 @@ func (tab *QuoteApiBuilder) WithLanguage(language string) *QuoteApiBuilder {
 	return tab
 }
 
-// Build constructs and returns a quoteAPI instance.
+// Build constructs and returns a QuoteProvider interface.
 func (tab *QuoteApiBuilder) Build() QuoteProvider {
 	return tab.api
 }
@@ -119,9 +120,9 @@ type Data struct {
 }
 
 // GetRandomQuote fetches a random quote using the provided configuration from the quote API.
-func (api *quoteAPI) GetRandomQuote(txtcnfg quoteConfig) (string, error) {
+func (api *quoteAPI) GetRandomQuote(qtCnfgBldr *QuoteConfigBuilder) (string, error) {
 	data := &Data{}
-	path := api.buildPath(txtcnfg)
+	path := api.buildPath(qtCnfgBldr.Build())
 
 	var resp *http.Response
 	err := retry.Do(

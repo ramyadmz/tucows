@@ -9,7 +9,7 @@ import (
 
 func TestGetRandomQuote_success(t *testing.T) {
 	quoteAPI := NewQuoteApiBuilder().Build()
-	quoteConfig := NewQuoteConfigBuilder().WithKey(100).Build()
+	quoteConfig := NewQuoteConfigBuilder().WithKey(100)
 
 	result, err := quoteAPI.GetRandomQuote(quoteConfig)
 	assert.NoError(t, err, "Expected no error from GetRandomQuote")
@@ -18,7 +18,7 @@ func TestGetRandomQuote_success(t *testing.T) {
 
 func TestGetRandomQuote_Error(t *testing.T) {
 	quoteAPI := NewQuoteApiBuilder().WithBaseURL("http://unavailable.api").Build()
-	quoteConfig := NewQuoteConfigBuilder().Build()
+	quoteConfig := NewQuoteConfigBuilder()
 	expectedError := fmt.Errorf("failed to get image from random quote API after retries")
 
 	_, err := quoteAPI.GetRandomQuote(quoteConfig)

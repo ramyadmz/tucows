@@ -32,6 +32,11 @@ const (
 	ImageFilterBlur      = "blur"
 )
 
+// ImageProvider is an interface that defines the contract for fetching random images.
+type ImageProvider interface {
+	GetRandomImage(imgCnfg *ImageConfigBuilder) (image.Image, error)
+}
+
 // ImageAPIBuilder provides methods for building an imageAPI instance.
 type ImageAPIBuilder struct {
 	api *imageAPI
@@ -40,10 +45,6 @@ type ImageAPIBuilder struct {
 // imageAPI represents an image API with a base URL.
 type imageAPI struct {
 	baseURL string
-}
-
-type ImageProvider interface {
-	GetRandomImage(imgCnfg imageConfig) (image.Image, error)
 }
 
 // ImageConfigBuilder provides methods for building an imageConfig instance.
@@ -73,7 +74,7 @@ func (iab *ImageAPIBuilder) WithBaseURL(baseURL string) *ImageAPIBuilder {
 	return iab
 }
 
-// Build constructs and returns an imageAPI instance.
+// Build constructs and returns an ImageProvider interface.
 func (iab *ImageAPIBuilder) Build() ImageProvider {
 	return iab.api
 }
@@ -120,8 +121,8 @@ func (icb *ImageConfigBuilder) Build() imageConfig {
 }
 
 // GetRandomImage fetches a random image using the provided configuration from the image API.
-func (api *imageAPI) GetRandomImage(imgCnfg imageConfig) (image.Image, error) {
-	path := api.buildPath(imgCnfg)
+func (api *imageAPI) GetRandomImage(imgCnfg *ImageConfigBuilder) (image.Image, error) {
+	path := api.buildPath(imgCnfg.Build())
 	var resp *http.Response
 	var image image.Image
 

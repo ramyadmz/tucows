@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/fogleman/gg"
-	"github.com/ramyad/tucows/internal/api/facade"
+	"github.com/ramyad/tucows/internal/api"
 	"github.com/ramyad/tucows/internal/api/imageapi"
 	"github.com/ramyad/tucows/internal/api/quoteapi"
 	"github.com/ramyad/tucows/internal/app"
@@ -23,7 +23,7 @@ const (
 
 // TerminalApp implements the AppInterface for the terminal application.
 type TerminalApp struct {
-	api     facade.API
+	api     api.API
 	options app.Options
 }
 
@@ -31,9 +31,9 @@ type TerminalApp struct {
 var _ app.App = (*TerminalApp)(nil)
 
 // NewTerminalApp creates a new instance of the TerminalApp.
-func NewTerminalApp(apiFacade facade.API) app.App {
+func NewTerminalApp(api api.API) app.App {
 	return &TerminalApp{
-		api: apiFacade,
+		api: api,
 	}
 }
 
