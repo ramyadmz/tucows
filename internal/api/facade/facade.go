@@ -10,6 +10,9 @@ import (
 	"github.com/ramyad/tucows/internal/api/quoteapi"
 )
 
+// Ensure that *APIFacade implements api.API interface
+var _ api.API = (*APIFacade)(nil)
+
 // APIFacade encapsulates interactions with quote and image APIs.
 type APIFacade struct {
 	quoteProvider quoteapi.QuoteProvider
